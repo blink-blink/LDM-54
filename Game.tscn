@@ -1,0 +1,97 @@
+[gd_scene load_steps=6 format=3 uid="uid://bysj3d8bi03f3"]
+
+[ext_resource type="Script" path="res://Game.gd" id="1_mv8fg"]
+[ext_resource type="Texture2D" uid="uid://cmjlwsnkmd8k8" path="res://replacethiswithnoncopyrightedart.png" id="1_tc6ct"]
+[ext_resource type="Script" path="res://WorldControl.gd" id="2_4xnv1"]
+[ext_resource type="PackedScene" uid="uid://bk3arvvm1m2w5" path="res://passenger.tscn" id="4_slanw"]
+[ext_resource type="Script" path="res://SeatsHContainer.gd" id="5_3c8ts"]
+
+[node name="World" type="CanvasLayer"]
+script = ExtResource("1_mv8fg")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="Layer1" type="ParallaxBackground" parent="ParallaxBackground"]
+
+[node name="Polygon2D" type="Polygon2D" parent="ParallaxBackground/Layer1"]
+position = Vector2(0.00604486, 4.63638)
+scale = Vector2(1.00086, 0.989899)
+color = Color(0.14902, 0.14902, 0.14902, 1)
+polygon = PackedVector2Array(-2, 459, 1154, 457.99, 1154, 650.939, -7, 657)
+
+[node name="Layer2" type="ParallaxBackground" parent="ParallaxBackground"]
+
+[node name="Jeepney" type="Sprite2D" parent="."]
+position = Vector2(850, 375)
+scale = Vector2(0.300835, 0.300835)
+texture = ExtResource("1_tc6ct")
+flip_h = true
+
+[node name="WorldControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("2_4xnv1")
+
+[node name="PassengerMarker" type="Marker2D" parent="WorldControl"]
+position = Vector2(620, 451)
+
+[node name="Passenger" parent="WorldControl/PassengerMarker" instance=ExtResource("4_slanw")]
+
+[node name="Interface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Interface"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -52.0
+offset_bottom = 26.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer"]
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="Interface/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Score: "
+
+[node name="Label2" type="Label" parent="Interface/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "10000"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Interface"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 10
+
+[node name="SeatsHContainer" type="HBoxContainer" parent="Interface/MarginContainer2"]
+layout_mode = 2
+alignment = 1
+script = ExtResource("5_3c8ts")
+
+[node name="LeftSeats" type="HBoxContainer" parent="Interface/MarginContainer2/SeatsHContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="RightSeats" type="HBoxContainer" parent="Interface/MarginContainer2/SeatsHContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="FrontSeats" type="HBoxContainer" parent="Interface/MarginContainer2/SeatsHContainer"]
+layout_mode = 2
+alignment = 1
