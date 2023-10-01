@@ -5,6 +5,9 @@ var seat_id: int
 @onready var world = get_node("../../../../..")
 
 func _get_drag_data(at_position):
+	if not passenger:
+		return
+	
 	passenger.selected = true
 	passenger.visible = true
 	

@@ -24,6 +24,12 @@ func _process(delta):
 func add_to_passenger_group():
 	pass
 
+func is_passenger_in_group(passenger: Passenger):
+	for group in world.passenger_groups:
+		if group.has(passenger):
+			return true
+	return false
+
 func follow_mouse():
 	global_position = get_global_mouse_position()
 
@@ -38,6 +44,7 @@ func on_mouse_release():
 func _on_area_2d_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			print("input press")
+			if is_passenger_in_group(self):
+				print("passenger in group")
 			selected = true
 			WorldControl.force_drag(self, null)

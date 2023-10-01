@@ -30,8 +30,6 @@ func _ready():
 		id+=1
 		
 		left_seats.add_child(seat)
-		
-	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
