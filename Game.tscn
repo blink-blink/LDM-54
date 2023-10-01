@@ -34,15 +34,22 @@ mouse_filter = 2
 script = ExtResource("2_4xnv1")
 
 [node name="Passengers" type="Marker2D" parent="WorldControl"]
-position = Vector2(620, 451)
+position = Vector2(620, 388.308)
 
 [node name="Passenger" parent="WorldControl/Passengers" instance=ExtResource("4_slanw")]
+visible = false
 
 [node name="Passenger2" parent="WorldControl/Passengers" instance=ExtResource("4_slanw")]
-position = Vector2(-79, -62.692)
+visible = false
+position = Vector2(-79, 0)
 
 [node name="Passenger3" parent="WorldControl/Passengers" instance=ExtResource("4_slanw")]
-position = Vector2(-160, -62.692)
+visible = false
+position = Vector2(-160, 0)
+
+[node name="Passenger4" parent="WorldControl/Passengers" instance=ExtResource("4_slanw")]
+visible = false
+position = Vector2(-244, 0)
 
 [node name="Interface" type="Control" parent="."]
 layout_mode = 3

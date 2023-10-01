@@ -1,20 +1,22 @@
 class_name Passenger
 extends Node2D
 
-var selected: bool = false
-var selected_group: int
 @onready var original_position: Vector2 = position
 @onready var  WorldControl: Control = $"../.."
 @onready var world = get_node("../../..")
 
 static var GROUP_OFFSET_ON_DRAG = 20
 
+var selected: bool = false
+var selected_group: int
+
 #attributes
 var panel_texture_path: String = "res://icon.svg"
-var tags = []
-
-var profit
-var number_of_stops
+@onready var personality = world.passenger_personality.NEUTRAL
+@onready var location = world.passenger_location.ANYWHERE
+var profit = 10
+var number_of_stops = 2
+var adj_count = 0
 
 func _input(event):
 	#on mouse release
@@ -23,6 +25,8 @@ func _input(event):
 			print("released")
 			selected = false
 			position = original_position
+			adj_count = 0
+			
 
 func _process(delta):
 	if selected:

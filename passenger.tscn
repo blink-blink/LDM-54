@@ -7,7 +7,6 @@
 size = Vector2(63, 120)
 
 [node name="Passenger" type="Node2D"]
-position = Vector2(0, -62.692)
 script = ExtResource("1_t15ly")
 
 [node name="Sprite" type="Sprite2D" parent="."]
