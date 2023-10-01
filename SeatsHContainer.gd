@@ -2,36 +2,27 @@ extends HBoxContainer
 
 var seat_scene = preload("res://seat.tscn")
 
-@export var num_seats = 8
-@export var num_seats_front = 1
-
 @onready var left_seats = $LeftSeats
 @onready var right_seats = $RightSeats
 @onready var front_seats = $FrontSeats
+@onready var world = $"../../.."
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	#populate seats
-	var id = 0
 	for i in 2:
-		for j in num_seats:
+		for j in world.num_seats:
 			print(i,j)
 			var seat = seat_scene.instantiate()
-			seat.seat_id = id
-			id+=1
 			if i == 0: 
+				world.left_seats.append(seat)
 				left_seats.add_child(seat)
 			else:
+				world.right_seats.append(seat)
 				right_seats.add_child(seat)
 	
-	for i in num_seats_front:
+	for i in world.num_seats_front:
 		var seat = seat_scene.instantiate()
-		seat.seat_id = id
-		id+=1
+		world.front_seats.append(seat)
 		
-		left_seats.add_child(seat)
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+		front_seats.add_child(seat)
+	

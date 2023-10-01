@@ -33,10 +33,16 @@ anchors_preset = 0
 mouse_filter = 2
 script = ExtResource("2_4xnv1")
 
-[node name="PassengerMarker" type="Marker2D" parent="WorldControl"]
+[node name="Passengers" type="Marker2D" parent="WorldControl"]
 position = Vector2(620, 451)
 
-[node name="Passenger" parent="WorldControl/PassengerMarker" instance=ExtResource("4_slanw")]
+[node name="Passenger" parent="WorldControl/Passengers" instance=ExtResource("4_slanw")]
+
+[node name="Passenger2" parent="WorldControl/Passengers" instance=ExtResource("4_slanw")]
+position = Vector2(-79, -62.692)
+
+[node name="Passenger3" parent="WorldControl/Passengers" instance=ExtResource("4_slanw")]
+position = Vector2(-160, -62.692)
 
 [node name="Interface" type="Control" parent="."]
 layout_mode = 3
