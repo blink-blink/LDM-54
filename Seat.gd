@@ -1,10 +1,11 @@
 extends TextureRect
 
 var passenger: Passenger
+var is_locked: bool = false
 @onready var world = get_node("../../../../..")
 
 func _get_drag_data(at_position):
-	if not passenger:
+	if not passenger or is_locked:
 		return
 	
 	#update passenger
@@ -154,6 +155,17 @@ func update_seat(data: Passenger):
 	texture = texture_data
 	passenger = data
 	passenger.on_drop()
+
+func on_next_station():
+	if passenger:
+		if not is_locked:
+			is_locked = true
+		passenger.number_of_stops -= 1
+		if passenger.number_of_stops <= 0:
+			world.update_score(passenger.profit)
+			passenger.queue_free()
+			passenger = null
+			texture = null
 
 func update_on_drag_seat(data: Passenger):
 	passenger.selected = true

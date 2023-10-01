@@ -4,6 +4,7 @@ extends Node2D
 @onready var original_position: Vector2 = position
 @onready var  WorldControl: Control = $"../.."
 @onready var world = get_node("../../..")
+@onready var label = $Label
 
 static var GROUP_OFFSET_ON_DRAG = 20
 
@@ -17,15 +18,18 @@ var panel_texture_path: String = "res://icon.svg"
 var profit = 10
 var number_of_stops = 2
 var adj_count = 0
+var is_seated: bool = false
 
 func _input(event):
 	#on mouse release
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if not event.pressed and selected:
-			print("released")
-			selected = false
-			position = original_position
-			adj_count = 0
+			var g = find_passenger_group()
+			if g:
+				for passenger in g:
+					passenger.on_release()
+			else:
+				on_release()
 			
 
 func _process(delta):
@@ -55,8 +59,14 @@ func follow_mouse():
 	global_position = get_global_mouse_position()
 
 func on_drop():
+	is_seated = true
 	visible = false
 
+func on_release():
+	selected = false
+	position = original_position
+	adj_count = 0
+	
 func _on_area_2d_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:

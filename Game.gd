@@ -10,6 +10,8 @@ var front_seats = []
 @export var num_seats = 8
 @export var num_seats_front = 1
 @onready var passengers = $WorldControl/Passengers
+@onready var score_value_label = $Interface/MarginContainer/HBoxContainer/ScoreValueLabel
+var score = 0
 
 static var PASSENGER_QUEUE_OFFSET = 80
 
@@ -92,6 +94,11 @@ var passenger_type = {
 	}
 }
 
+func clear_passengers():
+	for p in passenger_queue:
+		if not p.is_seated:
+			p.queue_free()
+	passenger_queue.clear()
 
 func populate_passengers(p_count):
 	for i in p_count:
@@ -110,6 +117,7 @@ func spawn_passenger(p):
 		passenger.global_position = passengers.global_position - Vector2(PASSENGER_QUEUE_OFFSET * passenger_queue.size(),0)
 		passenger.original_position = passenger.position
 		passenger_queue.append(passenger)
+		passenger.label.text = p
 		passenger.personality = passenger_type[p]["personality"]
 		passenger.location = passenger_type[p]["location"]
 		passenger.profit = passenger_type[p]["profit"]
@@ -121,6 +129,26 @@ func spawn_passenger(p):
 		passenger_groups.append(g)
 	
 	return j
+
+func next_station():
+	#change bg
+	#repop passengers
+	update_seats()
+	clear_passengers()
+	populate_passengers(4)
+	#update score
+	pass
+
+func update_seats():
+	for s in left_seats:
+		s.on_next_station()
+			
+
+func update_score(s):
+	score_value_label.text = str(score + s)
+
+func game_over():
+	pass
 
 func _ready():
 #	#test
@@ -135,3 +163,7 @@ func _ready():
 #
 #	passenger4.location = passenger_location.LAST
 	populate_passengers(4)
+
+
+func _on_button_pressed():
+	next_station()

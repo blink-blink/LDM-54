@@ -78,9 +78,9 @@ layout_mode = 2
 layout_mode = 2
 text = "Score: "
 
-[node name="Label2" type="Label" parent="Interface/MarginContainer/HBoxContainer"]
+[node name="ScoreValueLabel" type="Label" parent="Interface/MarginContainer/HBoxContainer"]
 layout_mode = 2
-text = "10000"
+text = "0"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Interface"]
 layout_mode = 1
@@ -108,3 +108,25 @@ alignment = 1
 [node name="FrontSeats" type="HBoxContainer" parent="Interface/MarginContainer2/SeatsHContainer"]
 layout_mode = 2
 alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="Interface"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 100
+
+[node name="Button" type="Button" parent="Interface/MarginContainer3"]
+layout_mode = 2
+text = "Next Station"
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="pressed" from="Interface/MarginContainer3/Button" to="." method="_on_button_pressed"]
