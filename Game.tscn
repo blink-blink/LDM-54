@@ -1,7 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://bysj3d8bi03f3"]
+[gd_scene load_steps=19 format=3 uid="uid://bysj3d8bi03f3"]
 
 [ext_resource type="Script" path="res://Game.gd" id="1_mv8fg"]
-[ext_resource type="Texture2D" uid="uid://cmjlwsnkmd8k8" path="res://replacethiswithnoncopyrightedart.png" id="1_tc6ct"]
 [ext_resource type="Script" path="res://WorldControl.gd" id="2_4xnv1"]
 [ext_resource type="Texture2D" uid="uid://dpw2ydh53y6pa" path="res://Assets/Background/CityScapeParallax_Layer4.png" id="2_aqrel"]
 [ext_resource type="Script" path="res://ParallaxBackground.gd" id="2_u6okd"]
@@ -11,7 +10,12 @@
 [ext_resource type="Script" path="res://SeatsHContainer.gd" id="5_3c8ts"]
 [ext_resource type="Texture2D" uid="uid://hu8mwljn0qv3" path="res://Assets/Background/CityScapeParallax_Layer1.png" id="5_nvbgo"]
 [ext_resource type="Texture2D" uid="uid://bo4njjrwujl52" path="res://Assets/station.png" id="7_m3dno"]
+[ext_resource type="Texture2D" uid="uid://bb16wnpyvin78" path="res://Assets/Jeepney/body.png" id="8_0r8s6"]
+[ext_resource type="FontFile" uid="uid://cqc3sov6sv3ul" path="res://Assets/Fonts/Cubao_Free_Regular.otf" id="11_5gbt3"]
 [ext_resource type="FontFile" uid="uid://l0heglvifqok" path="res://Assets/Fonts/BadComic-Regular.ttf" id="11_soau4"]
+[ext_resource type="Texture2D" uid="uid://c3ib12xs5m0wc" path="res://Assets/Icons/TitleSplash.png" id="12_ywgnw"]
+[ext_resource type="AudioStream" uid="uid://em3jo0gmd8wh" path="res://Assets/Sounds/beep.mp3" id="15_5unuc"]
+[ext_resource type="AudioStream" uid="uid://f2x7lc55sj04" path="res://Assets/Sounds/ambiance.wav" id="16_8jt67"]
 
 [sub_resource type="Gradient" id="Gradient_ohnid"]
 colors = PackedColorArray(1, 1, 1, 1, 0.18, 0.699333, 1, 1)
@@ -79,7 +83,7 @@ texture = ExtResource("7_m3dno")
 [node name="Jeepney" type="Sprite2D" parent="."]
 position = Vector2(854, 430.125)
 scale = Vector2(0.300835, 0.300835)
-texture = ExtResource("1_tc6ct")
+texture = ExtResource("8_0r8s6")
 flip_h = true
 
 [node name="WorldControl" type="Control" parent="."]
@@ -127,9 +131,21 @@ theme_override_constants/separation = 40
 
 [node name="GameOverLabel" type="Label" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("11_soau4")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_5gbt3")
 theme_override_font_sizes/font_size = 40
 text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="GameOverScoreLabel" type="Label" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_5gbt3")
+theme_override_font_sizes/font_size = 30
+text = "Score: 0"
+horizontal_alignment = 1
 
 [node name="RestartButton" type="Button" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -142,26 +158,39 @@ text = "Quit"
 
 [node name="MainMenu" type="CanvasLayer" parent="."]
 
+[node name="TitleSplash" type="Sprite2D" parent="MainMenu"]
+position = Vector2(844, 210)
+scale = Vector2(0.257701, 0.26048)
+texture = ExtResource("12_ywgnw")
+
 [node name="MarginContainer" type="MarginContainer" parent="MainMenu"]
-anchors_preset = 6
+anchors_preset = 11
 anchor_left = 1.0
-anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -56.0
-offset_top = -17.5
-offset_bottom = 17.5
+anchor_bottom = 1.0
+offset_left = -58.0
 grow_horizontal = 0
 grow_vertical = 2
-theme_override_constants/margin_right = 200
-theme_override_constants/margin_bottom = 100
+theme_override_constants/margin_right = 260
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="MainMenu/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("11_5gbt3")
+theme_override_font_sizes/font_size = 100
+text = "IKOT"
 
 [node name="StartGame" type="Button" parent="MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("11_5gbt3")
+theme_override_font_sizes/font_size = 30
 text = "START"
 
 [node name="Interface" type="CanvasLayer" parent="."]
@@ -177,16 +206,56 @@ grow_horizontal = 0
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Interface/MarginContainer"]
 layout_mode = 2
 
-[node name="ScoreLabel" type="Label" parent="Interface/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="Interface/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_5gbt3")
 text = "Score: "
 
-[node name="ScoreValueLabel" type="Label" parent="Interface/MarginContainer/HBoxContainer"]
+[node name="ScoreValueLabel" type="Label" parent="Interface/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_5gbt3")
 text = "0"
+
+[node name="QuotaLabel" type="Label" parent="Interface/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_5gbt3")
+text = "Quota: "
+
+[node name="STQLabel" type="Label" parent="Interface/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("11_5gbt3")
+text = "Stations till Quota: "
+
+[node name="MarginContainer3" type="MarginContainer" parent="Interface"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -125.0
+offset_top = -111.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 80
+
+[node name="Button" type="Button" parent="Interface/MarginContainer3"]
+layout_mode = 2
+text = "Next Station"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Interface"]
 anchors_preset = 12
@@ -202,36 +271,41 @@ layout_mode = 2
 alignment = 1
 script = ExtResource("5_3c8ts")
 
+[node name="L" type="Label" parent="Interface/MarginContainer2/SeatsHContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("11_soau4")
+text = "L"
+
 [node name="LeftSeats" type="HBoxContainer" parent="Interface/MarginContainer2/SeatsHContainer"]
 layout_mode = 2
 alignment = 1
+
+[node name="R" type="Label" parent="Interface/MarginContainer2/SeatsHContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("11_soau4")
+text = "R"
 
 [node name="RightSeats" type="HBoxContainer" parent="Interface/MarginContainer2/SeatsHContainer"]
 layout_mode = 2
 alignment = 1
 
+[node name="F" type="Label" parent="Interface/MarginContainer2/SeatsHContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("11_soau4")
+text = "F"
+
 [node name="FrontSeats" type="HBoxContainer" parent="Interface/MarginContainer2/SeatsHContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="MarginContainer3" type="MarginContainer" parent="Interface"]
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -40.0
-offset_top = -40.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 80
-
-[node name="Button" type="Button" parent="Interface/MarginContainer3"]
-layout_mode = 2
-text = "Next Station"
-
 [node name="Timer" type="Timer" parent="."]
+
+[node name="Beep" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15_5unuc")
+
+[node name="AmbientSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_8jt67")
+autoplay = true
 
 [connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

@@ -53,15 +53,17 @@ func _can_drop_data(at_position, data):
 			var j = g.find(passenger)
 			var k = g.find(dropped_passenger)
 			
-			print(j,k)
+#			print("i:",i,"j:",j,"k:",k,i+(j-k))
 			returng = returng && is_seatable(s,j,k)
 			
-			if j == 0 and s[i - (j-k)-1].passenger:
-				adj_count += 1
-				adj_l = s[i - (j-k)-1].passenger 
-			if j == g.size() - 1  and s[i - (j-k)+1].passenger:
-				adj_count += 1
-				adj_r = s[i - (j-k)+1].passenger 
+			if j == g.size() - 1 and i - (j-k)-1 >= 0:
+				if s[i - (j-k)-1].passenger:
+					adj_count += 1
+					adj_l = s[i - (j-k)-1].passenger 
+			if j == 0  and i - (j-k)+1 <= s.size() - 1:
+				if s[i - (j-k)+1].passenger:
+					adj_count += 1
+					adj_r = s[i - (j-k)+1].passenger 
 	else:
 		if i-1 >= 0:
 			if s[i-1].passenger:
@@ -114,11 +116,11 @@ func is_seatable(seats: Array,j,k):
 	if (i - (j-k)) < 0 or (i - (j-k)) >= world.num_seats:
 #		print("invalid index: ")
 		return false
-	if not seats[i - (j-k)].passenger:
-#		print("seatable")
-		return true
-#	print("passenger is sitting")
-	return false
+	if seats[i - (j-k)].passenger:
+#		print("passenger is sitting")
+		return false
+#	print("seatable")
+	return true
 
 func _drop_data(at_position, data):
 	var dropped_passenger: Passenger = data
@@ -143,7 +145,7 @@ func _drop_data(at_position, data):
 				s = world.front_seats
 				
 			i = s.find(self)
-			s[i - (j - k)].update_seat(passenger)
+			s[i - (j-k)].update_seat(passenger)
 	
 	update_seat(dropped_passenger)
 
@@ -165,8 +167,11 @@ func on_next_station():
 			passenger = null
 			texture = null
 
+func remove_passenger():
+	passenger = null
+	texture = null
+
 func update_on_drag_seat(data: Passenger):
 	passenger.selected = true
 	passenger.visible = true
-	passenger = null
-	texture = null
+	remove_passenger()

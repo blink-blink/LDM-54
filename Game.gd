@@ -12,13 +12,15 @@ var front_seats = []
 @onready var station = $Station
 @onready var passengers = $WorldControl/Passengers
 @onready var jeepney = $Jeepney
-@onready var score_value_label = $Interface/MarginContainer/HBoxContainer/ScoreValueLabel
+@onready var score_value_label = $Interface/MarginContainer/VBoxContainer/HBoxContainer/ScoreValueLabel
+@onready var quota_label = $Interface/MarginContainer/VBoxContainer/QuotaLabel
+@onready var stations_till_quota_label = $Interface/MarginContainer/VBoxContainer/STQLabel
 @onready var hud = $Interface
 
 var base_quota = 100
 var quota_increment = 10
 var quota = 0
-var stations_total = 1
+var stations_total = 5
 var stations_till_quota = 0
 var score = 0
 
@@ -36,21 +38,32 @@ enum passenger_personality {NEUTRAL, INTROVERT, SOCIAL}
 enum passenger_location {ANYWHERE, FRONT, BACK, LAST}
 
 var passenger_type = {
+	"normal":{
+		"personality" : passenger_personality.NEUTRAL,
+		"location" : passenger_location.ANYWHERE,
+		"profit": 10,
+		"number of stops" : 2,
+		"min count": 1,
+		"max count": 1,
+		"description": "Can be placed anywhere. Occupies one seat for two stops and gives 10 profit."
+	},
 	"couple":{
 		"personality" : passenger_personality.NEUTRAL,
 		"location" : passenger_location.ANYWHERE,
-		"profit": 20,
+		"profit": 10,
 		"number of stops" : 2,
 		"min count": 2,
-		"max count": 2
+		"max count": 2,
+		"description": "Can be placed anywhere. Occupies two seats for two stops and gives 20 profit."
 	},
 	"group":{
 		"personality" : passenger_personality.NEUTRAL,
 		"location" : passenger_location.ANYWHERE,
-		"profit": 20,
+		"profit": 10,
 		"number of stops" : 2,
 		"min count": 3,
-		"max count": 4
+		"max count": 4,
+		"description": "Can be placed anywhere. Occupies three or four seats for two stops and gives 10 profit for each passenger."
 	},
 	"quick":{
 		"personality" : passenger_personality.NEUTRAL,
@@ -58,7 +71,8 @@ var passenger_type = {
 		"profit": 5,
 		"number of stops" : 1,
 		"min count": 1,
-		"max count": 1
+		"max count": 1,
+		"description": "Can be placed anywhere. Occupies one seat for one stop and gives 5 profit."
 	},
 	"slow":{
 		"personality" : passenger_personality.NEUTRAL,
@@ -66,23 +80,26 @@ var passenger_type = {
 		"profit": 20,
 		"number of stops" : 3,
 		"min count": 1,
-		"max count": 1
+		"max count": 1,
+		"description": "Can be placed anywhere. Occupies one seat for three stops and gives 20 profit."
 	},
 	"introvert":{
 		"personality" : passenger_personality.INTROVERT,
 		"location" : passenger_location.ANYWHERE,
-		"profit": 20,
+		"profit": 10,
 		"number of stops" : 2,
 		"min count": 1,
-		"max count": 1
+		"max count": 1,
+		"description": "Must be placed either the front or the edge seats. Occupies one seat for two stops and gives 10 profit."
 	},
 	"social":{
 		"personality" : passenger_personality.SOCIAL,
 		"location" : passenger_location.ANYWHERE,
-		"profit": 20,
+		"profit": 10,
 		"number of stops" : 2,
 		"min count": 1,
-		"max count": 1
+		"max count": 1,
+		"description": "Must be placed in between two other passengers. Occupies one seat for two stops and gives 10 profit."
 	},
 	"shotgun":{
 		"personality" : passenger_personality.NEUTRAL,
@@ -90,7 +107,8 @@ var passenger_type = {
 		"profit": 10,
 		"number of stops" : 2,
 		"min count": 1,
-		"max count": 1
+		"max count": 1,
+		"description": "Must be placed only in the front seat. Occupies one seat for two stops and gives 10 profit."
 	},
 	"elderly":{
 		"personality" : passenger_personality.NEUTRAL,
@@ -98,7 +116,8 @@ var passenger_type = {
 		"profit": 10,
 		"number of stops" : 2,
 		"min count": 1,
-		"max count": 1
+		"max count": 1,
+		"description": "Must be placed only in the last seat. Occupies one seat for two stops and gives 10 profit."
 	},
 	"wife":{
 		"personality" : passenger_personality.NEUTRAL,
@@ -106,7 +125,8 @@ var passenger_type = {
 		"profit": 10,
 		"number of stops" : 2,
 		"min count": 1,
-		"max count": 1
+		"max count": 1,
+		"description": "Must be placed only in the front seat. Occupies one seat for two stops and gives no profit but doubles incoming profit from other passengers."
 	}
 }
 
@@ -122,8 +142,12 @@ func populate_passengers(p_count):
 
 func spawn_passenger(p):
 	print(p)
+	if (is_wife_sitting() or is_wife_in_queue()) and p == "wife":
+		p = "normal"
+	
 	var g = []
 	var j = randi_range(passenger_type[p]["min count"],passenger_type[p]["max count"])
+	var n = randi_range(1,2)
 	for i in range(0,j,1):
 		var passenger_scene = load("res://passenger.tscn")
 		var passenger = passenger_scene.instantiate()
@@ -138,6 +162,11 @@ func spawn_passenger(p):
 		passenger.location = passenger_type[p]["location"]
 		passenger.profit = passenger_type[p]["profit"]
 		passenger.number_of_stops = passenger_type[p]["number of stops"]
+		passenger.description = passenger_type[p]["description"]
+		if p == "group":
+			passenger.set_sprite_texture(p,n)
+		else:
+			passenger.set_sprite_texture(p,0)
 		g.append(passenger)
 	
 	if g.size() > 1:
@@ -154,9 +183,11 @@ func next_station():
 		if quota > 0:
 			game_over()
 			return
+		base_quota += quota_increment
 		quota = base_quota
-	else:
-		stations_till_quota -= 1
+		quota_label.text = "Quota: "+str(quota)
+	stations_till_quota -= 1
+	stations_till_quota_label.text = "Stations till Quota: "+str(stations_till_quota)
 	
 	#repop passengers
 	update_seats()
@@ -209,14 +240,33 @@ func update_seats():
 		s.on_next_station()
 			
 
+func is_wife_sitting():
+	if front_seats[0].passenger:
+		if front_seats[0].passenger.type_name == "wife":
+			return true
+	return false
+
+func is_wife_in_queue():
+	for p in passenger_queue:
+		if p.type_name == "wife":
+			return true
+	return false
+
 func update_score(s):
+	if is_wife_sitting():
+		s*=2
 	quota -= s
+	if quota < 0:
+		quota = 0
 	score += s
 	score_value_label.text = str(score)
+	quota_label.text = "Quota: "+str(quota)
 
 func game_over():
 	game_over_ui.visible = true
 	hud.visible = false
+	var game_over_score = $GameOver/PanelContainer/MarginContainer/VBoxContainer/GameOverScoreLabel
+	game_over_score.text = "Score: " + str(score)
 
 func _ready():
 	on_game_start()
@@ -229,13 +279,27 @@ func on_game_start():
 	hud.visible = false
 	
 	velocity_x = MAX_VELOCTIY_X
+	stations_till_quota = stations_total
+	quota = base_quota
+	stations_till_quota_label.text = "Stations till Quota: "+str(stations_till_quota)
+	quota_label.text = "Quota: "+str(quota)
 	jeepney.global_position = jeepney.global_position - Vector2(500,0)
 	station.visible = false
+
+func reset_game():
+	for s in left_seats:
+		s.remove_passenger()
+	for s in right_seats:
+		s.remove_passenger()
+	for s in front_seats:
+		s.remove_passenger()
 
 func _on_button_pressed():
 	if p_tween:
 		if p_tween.is_running():
 			return
+	var beep = $Beep
+	beep.play()
 	pre_next_station(false)
 
 
@@ -246,6 +310,7 @@ func _on_start_game_pressed():
 
 func _on_restart_button_pressed():
 	game_over_ui.visible = false
+	reset_game()
 	pre_next_station(false)
 
 
