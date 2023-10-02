@@ -20,13 +20,7 @@ func _get_drag_data(at_position):
 			var j = g.find(passenger)
 			var k = g.find(dragged_passenger)
 			
-			var s
-			if self in world.left_seats:
-				s = world.left_seats
-			elif self in world.right_seats:
-				s = world.right_seats
-			else:
-				s = world.front_seats
+			var s = get_seat_group()
 				
 			i = s.find(self)
 			s[i - (j - k)].update_on_drag_seat(passenger)
@@ -48,13 +42,7 @@ func _can_drop_data(at_position, data):
 	var g = dropped_passenger.find_passenger_group()
 	var returng = true
 	
-	var s
-	if self in world.left_seats:
-		s = world.left_seats
-	elif self in world.right_seats:
-		s = world.right_seats
-	else:
-		s = world.front_seats
+	var s = get_seat_group()
 	var i = s.find(self)
 	
 	if g:
@@ -99,6 +87,7 @@ func _can_drop_data(at_position, data):
 	#adj check
 	if adj_l:
 		if adj_l.personality == world.passenger_personality.INTROVERT and adj_l.adj_count >= 1:
+#			print("introvert on left has two adj")
 			return false
 	if adj_r:
 		if adj_r.personality == world.passenger_personality.INTROVERT and adj_r.adj_count >= 1:
@@ -110,6 +99,14 @@ func _can_drop_data(at_position, data):
 		return false
 		
 	return returng && true
+
+func get_seat_group():
+	if self in world.left_seats:
+		return world.left_seats
+	elif self in world.right_seats:
+		return world.right_seats
+	else:
+		return world.front_seats
 
 func is_seatable(seats: Array,j,k):
 	var i
@@ -163,6 +160,7 @@ func on_next_station():
 		passenger.number_of_stops -= 1
 		if passenger.number_of_stops <= 0:
 			world.update_score(passenger.profit)
+			is_locked = false
 			passenger.queue_free()
 			passenger = null
 			texture = null

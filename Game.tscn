@@ -1,28 +1,83 @@
-[gd_scene load_steps=6 format=3 uid="uid://bysj3d8bi03f3"]
+[gd_scene load_steps=15 format=3 uid="uid://bysj3d8bi03f3"]
 
 [ext_resource type="Script" path="res://Game.gd" id="1_mv8fg"]
 [ext_resource type="Texture2D" uid="uid://cmjlwsnkmd8k8" path="res://replacethiswithnoncopyrightedart.png" id="1_tc6ct"]
 [ext_resource type="Script" path="res://WorldControl.gd" id="2_4xnv1"]
+[ext_resource type="Texture2D" uid="uid://dpw2ydh53y6pa" path="res://Assets/Background/CityScapeParallax_Layer4.png" id="2_aqrel"]
+[ext_resource type="Script" path="res://ParallaxBackground.gd" id="2_u6okd"]
+[ext_resource type="Texture2D" uid="uid://ch0gh7u885sk0" path="res://Assets/Background/CityScapeParallax_Layer3.png" id="3_e7b12"]
+[ext_resource type="Texture2D" uid="uid://blchys1e6ge6k" path="res://Assets/Background/CityScapeParallax_Layer2.png" id="4_jbide"]
 [ext_resource type="PackedScene" uid="uid://bk3arvvm1m2w5" path="res://passenger.tscn" id="4_slanw"]
 [ext_resource type="Script" path="res://SeatsHContainer.gd" id="5_3c8ts"]
+[ext_resource type="Texture2D" uid="uid://hu8mwljn0qv3" path="res://Assets/Background/CityScapeParallax_Layer1.png" id="5_nvbgo"]
+[ext_resource type="Texture2D" uid="uid://bo4njjrwujl52" path="res://Assets/station.png" id="7_m3dno"]
+[ext_resource type="FontFile" uid="uid://l0heglvifqok" path="res://Assets/Fonts/BadComic-Regular.ttf" id="11_soau4"]
+
+[sub_resource type="Gradient" id="Gradient_ohnid"]
+colors = PackedColorArray(1, 1, 1, 1, 0.18, 0.699333, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_50y2x"]
+gradient = SubResource("Gradient_ohnid")
 
 [node name="World" type="CanvasLayer"]
 script = ExtResource("1_mv8fg")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+script = ExtResource("2_u6okd")
 
-[node name="Layer1" type="ParallaxBackground" parent="ParallaxBackground"]
+[node name="Layer5" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0, 0)
 
-[node name="Polygon2D" type="Polygon2D" parent="ParallaxBackground/Layer1"]
-position = Vector2(0.00604486, 4.63638)
-scale = Vector2(1.00086, 0.989899)
-color = Color(0.14902, 0.14902, 0.14902, 1)
-polygon = PackedVector2Array(-2, 459, 1154, 457.99, 1154, 650.939, -7, 657)
+[node name="Polygon2D" type="Polygon2D" parent="ParallaxBackground/Layer5"]
+position = Vector2(110, 662)
+rotation = -1.56755
+scale = Vector2(0.657156, 1.38561)
+texture = SubResource("GradientTexture1D_50y2x")
+polygon = PackedVector2Array(-101, 840, 1270, 840, 1262, -114, -103, -116)
+uv = PackedVector2Array(-27.5363, 842.029, 249.275, 839.13, 260.87, -115.942, 5.79712, -108.696)
 
-[node name="Layer2" type="ParallaxBackground" parent="ParallaxBackground"]
+[node name="Layer4" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.12, 0.12)
+motion_mirroring = Vector2(2304, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Layer4"]
+position = Vector2(576, 324)
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("2_aqrel")
+
+[node name="Layer3" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.25, 0.25)
+motion_mirroring = Vector2(2304, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Layer3"]
+position = Vector2(576, 324)
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("3_e7b12")
+
+[node name="Layer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 0.5)
+motion_mirroring = Vector2(2304, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Layer2"]
+position = Vector2(576, 324)
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("4_jbide")
+
+[node name="Layer1" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(2304, 0)
+
+[node name="Road" type="Sprite2D" parent="ParallaxBackground/Layer1"]
+position = Vector2(576, 324)
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("5_nvbgo")
+
+[node name="Station" type="Sprite2D" parent="."]
+position = Vector2(450, 368)
+scale = Vector2(0.436113, 0.436113)
+texture = ExtResource("7_m3dno")
 
 [node name="Jeepney" type="Sprite2D" parent="."]
-position = Vector2(850, 375)
+position = Vector2(854, 430.125)
 scale = Vector2(0.300835, 0.300835)
 texture = ExtResource("1_tc6ct")
 flip_h = true
@@ -34,7 +89,7 @@ mouse_filter = 2
 script = ExtResource("2_4xnv1")
 
 [node name="Passengers" type="Marker2D" parent="WorldControl"]
-position = Vector2(620, 388.308)
+position = Vector2(624, 443.433)
 
 [node name="Passenger" parent="WorldControl/Passengers" instance=ExtResource("4_slanw")]
 visible = false
@@ -51,17 +106,68 @@ position = Vector2(-160, 0)
 visible = false
 position = Vector2(-244, 0)
 
-[node name="Interface" type="Control" parent="."]
-layout_mode = 3
+[node name="GameOver" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="PanelContainer" type="PanelContainer" parent="GameOver"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="GameOver/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOver/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 40
+
+[node name="GameOverLabel" type="Label" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("11_soau4")
+theme_override_font_sizes/font_size = 40
+text = "GAME OVER"
+
+[node name="RestartButton" type="Button" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Restart
+"
+
+[node name="QuitButton" type="Button" parent="GameOver/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[node name="MainMenu" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="MainMenu"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -56.0
+offset_top = -17.5
+offset_bottom = 17.5
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="StartGame" type="Button" parent="MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "START"
+
+[node name="Interface" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="MarginContainer" type="MarginContainer" parent="Interface"]
-layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -83,7 +189,6 @@ layout_mode = 2
 text = "0"
 
 [node name="MarginContainer2" type="MarginContainer" parent="Interface"]
-layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -110,7 +215,6 @@ layout_mode = 2
 alignment = 1
 
 [node name="MarginContainer3" type="MarginContainer" parent="Interface"]
-layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -121,7 +225,7 @@ offset_top = -40.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 100
+theme_override_constants/margin_bottom = 80
 
 [node name="Button" type="Button" parent="Interface/MarginContainer3"]
 layout_mode = 2
@@ -129,4 +233,8 @@ text = "Next Station"
 
 [node name="Timer" type="Timer" parent="."]
 
+[connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="pressed" from="GameOver/PanelContainer/MarginContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="MainMenu/MarginContainer/VBoxContainer/StartGame" to="." method="_on_start_game_pressed"]
+[connection signal="pressed" from="MainMenu/MarginContainer/VBoxContainer/StartGame" to="ParallaxBackground" method="_on_start_game_pressed"]
 [connection signal="pressed" from="Interface/MarginContainer3/Button" to="." method="_on_button_pressed"]
